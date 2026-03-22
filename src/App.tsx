@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import Particles from "react-tsparticles";
-import { loadFull } from "tsparticles";
+import Particles from "@tsparticles/react";
+import { loadFull } from "@tsparticles/engine";
 
 export default function App() {
   const particlesInit = async (main: any) => {
@@ -94,7 +94,7 @@ export default function App() {
           Professional Experience
         </h2>
 
-        {/* Timeline for each experience */}
+        {/* Timeline cards */}
         {[
           {
             title: "Zomato - Key Accounts Manager",
