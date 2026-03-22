@@ -7,7 +7,7 @@ export default function App() {
       {/* HERO */}
       <section className="h-screen flex flex-col justify-center items-center text-center px-6">
         <motion.img
-          src="https://via.placeholder.com/150"
+          src="/profile.jpg"
           alt="profile"
           className="w-32 h-32 rounded-full mb-4 border-4 border-purple-500"
           initial={{ scale: 0 }}
