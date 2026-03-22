@@ -1,6 +1,14 @@
 import { motion } from "framer-motion";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 export default function App() {
   const particlesInit = async (main: any) => {
@@ -34,7 +42,7 @@ export default function App() {
         onClick: { enable: true, mode: "push" },
       },
     },
-  } as any; // TS-safe cast
+  } as any;
 
   const experienceData = [
     {
@@ -42,11 +50,18 @@ export default function App() {
       period: "July 2025 - Present",
       details: [
         "Owned a 150+ partner restaurant portfolio with end-to-end P&L responsibility, managing 50,000+ monthly orders.",
-        "Delivered consistent growth by achieving 95%+ of monthly ad revenue targets, increasing portfolio order value by 7.8% and ads revenue by 7.6%.",
+        "Delivered consistent growth by achieving 95%+ of monthly ad revenue targets.",
         "Enhanced core business metrics with +2.8% ASV and +3.4% CV growth; ranked among the top 2% KAMs nationally.",
         "Optimized profitability by renegotiating commission terms with legacy partners.",
         "Accelerated market expansion in fringe clusters by onboarding 40 high-potential restaurants within 15 days.",
-        "Captured strategic competitive share by converting a competitor-exclusive restaurant generating ~5,000 monthly orders."
+        "Captured strategic competitive share by converting a competitor-exclusive restaurant generating ~5,000 monthly orders.",
+      ],
+      kpis: [
+        { name: "Order Value", value: 7.8 },
+        { name: "Ads Revenue", value: 7.6 },
+        { name: "Menu Quality", value: 12.1 },
+        { name: "ASV Growth", value: 2.8 },
+        { name: "CV Growth", value: 3.4 },
       ],
     },
     {
@@ -56,8 +71,9 @@ export default function App() {
         "Monitored capital expenditure budgets and ensured alignment with financial plans.",
         "Coordinated with cross-functional teams to facilitate timely clearance of Nil Claim Certificates.",
         "Organized and categorized truck order compliance data, improving tracking efficiency by 25%.",
-        "Conducted material management and expenditure analysis to support cost control initiatives."
+        "Conducted material management and expenditure analysis to support cost control initiatives.",
       ],
+      kpis: [],
     },
     {
       title: "Ramadas Paper Mill Pvt Ltd - Finance Intern",
@@ -66,8 +82,9 @@ export default function App() {
         "Prepared monthly financial reports and budgets, aiding in 15% faster decision-making.",
         "Optimized invoice processing, cutting turnaround time by 20%.",
         "Reconciled bank statements and ledgers, supporting audit readiness.",
-        "Analyzed expense trends to identify cost-saving opportunities, contributing to a 10% reduction in overheads."
+        "Analyzed expense trends to identify cost-saving opportunities, contributing to a 10% reduction in overheads.",
       ],
+      kpis: [],
     },
   ];
 
@@ -111,10 +128,16 @@ export default function App() {
     },
   ];
 
+  const metricsData = [
+    { name: "Portfolio Order Value", value: 7.8 },
+    { name: "Ads Revenue", value: 7.6 },
+    { name: "Menu Quality Score", value: 12.1 },
+    { name: "ASV Growth", value: 2.8 },
+    { name: "CV Growth", value: 3.4 },
+  ];
+
   return (
     <div className="relative bg-black text-white min-h-screen font-sans overflow-x-hidden">
-
-      {/* PARTICLE BACKGROUND */}
       <Particles
         id="tsparticles"
         init={particlesInit}
@@ -130,7 +153,11 @@ export default function App() {
           transition={{ duration: 0.8 }}
           className="rounded-full p-1 ring-4 ring-purple-500 ring-offset-4 animate-pulse"
         >
-          <img src="/profile.jpg" alt="profile" className="w-36 h-36 rounded-full border-2 border-white/20" />
+          <img
+            src="/profile.jpg"
+            alt="Ravipati Venkatasai Varshith"
+            className="w-36 h-36 rounded-full border-2 border-white/20"
+          />
         </motion.div>
 
         <motion.h1
@@ -169,7 +196,9 @@ export default function App() {
         {experienceData.map((exp, i) => (
           <motion.div
             key={i}
-            className={`mb-12 flex flex-col md:flex-row items-start ${i % 2 === 0 ? "" : "md:flex-row-reverse"}`}
+            className={`mb-12 flex flex-col md:flex-row items-start ${
+              i % 2 === 0 ? "" : "md:flex-row-reverse"
+            }`}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
@@ -179,8 +208,49 @@ export default function App() {
               <h3 className="text-xl font-semibold mb-2">{exp.title}</h3>
               <p className="text-gray-400 mb-4">{exp.period}</p>
               <ul className="list-disc ml-5 space-y-2 text-gray-300">
-                {exp.details.map((d, idx) => <li key={idx}>{d}</li>)}
+                {exp.details.map((d, idx) => (
+                  <li key={idx}>{d}</li>
+                ))}
               </ul>
+              {exp.kpis && exp.kpis.length > 0 && (
+                <div className="mt-4 h-40">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={exp.kpis}
+                      layout="vertical"
+                      margin={{ top: 5, right: 5, left: 10, bottom: 5 }}
+                    >
+                      <XAxis
+                        type="number"
+                        stroke="#fff"
+                        tick={{ fill: "#fff", fontSize: 12 }}
+                      />
+                      <YAxis
+                        type="category"
+                        dataKey="name"
+                        stroke="#fff"
+                        tick={{ fill: "#fff", fontSize: 12 }}
+                        width={100}
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "#111",
+                          border: "none",
+                          color: "#fff",
+                        }}
+                      />
+                      <Bar dataKey="value" fill="url(#gradKPI)" radius={[5, 5, 5, 5]}>
+                        <defs>
+                          <linearGradient id="gradKPI" x1="0" y1="0" x2="1" y2="0">
+                            <stop offset="0%" stopColor="#a855f7" stopOpacity={1} />
+                            <stop offset="100%" stopColor="#f472b6" stopOpacity={1} />
+                          </linearGradient>
+                        </defs>
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
             </div>
           </motion.div>
         ))}
@@ -188,20 +258,14 @@ export default function App() {
 
       {/* EDUCATION */}
       <section className="py-20 px-6 max-w-5xl mx-auto text-center">
-        <h2 className="text-4xl font-bold mb-12 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 text-transparent bg-clip-text">
-          Education & Certifications
+        <h2 className="text-4xl font-bold mb-10 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 text-transparent bg-clip-text">
+          Education
         </h2>
-        <div className="space-y-6">
+        <ul className="space-y-4 text-gray-300">
           {educationData.map((edu, i) => (
-            <motion.div
-              key={i}
-              className="p-4 bg-white/10 backdrop-blur-md rounded-xl shadow"
-              whileHover={{ scale: 1.05 }}
-            >
-              {edu}
-            </motion.div>
+            <li key={i}>{edu}</li>
           ))}
-        </div>
+        </ul>
       </section>
 
       {/* SKILLS */}
@@ -210,10 +274,10 @@ export default function App() {
           Skills
         </h2>
         <div className="flex flex-wrap justify-center gap-4">
-          {skillsData.map((skill, i) => (
+          {skillsData.map((skill) => (
             <motion.div
-              key={i}
-              className="px-5 py-2 bg-white/10 backdrop-blur-md rounded-full shadow hover:shadow-xl cursor-pointer"
+              key={skill}
+              className="px-5 py-2 bg-gray-800 rounded-full"
               whileHover={{ scale: 1.2 }}
             >
               {skill}
@@ -224,18 +288,22 @@ export default function App() {
 
       {/* EXTRACURRICULAR */}
       <section className="py-20 px-6 max-w-5xl mx-auto">
-        <h2 className="text-4xl font-bold mb-12 text-center bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 text-transparent bg-clip-text">
-          Extracurricular Activities
+        <h2 className="text-4xl font-bold text-center mb-10 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 text-transparent bg-clip-text">
+          Extracurricular
         </h2>
-        {extracurricularData.map((act, i) => (
+        {extracurricularData.map((item, i) => (
           <motion.div
             key={i}
-            className="mb-10 p-6 bg-white/10 backdrop-blur-md rounded-xl shadow hover:shadow-2xl"
-            whileHover={{ scale: 1.05 }}
+            className="mb-8 p-6 bg-white/10 backdrop-blur-md rounded-xl shadow-lg border border-white/20"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
           >
-            <h3 className="text-xl font-semibold mb-2">{act.title}</h3>
-            <ul className="list-disc ml-5 space-y-1 text-gray-300">
-              {act.details.map((d, idx) => <li key={idx}>{d}</li>)}
+            <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+            <ul className="list-disc ml-5 space-y-2 text-gray-300">
+              {item.details.map((d, idx) => (
+                <li key={idx}>{d}</li>
+              ))}
             </ul>
           </motion.div>
         ))}
@@ -243,16 +311,11 @@ export default function App() {
 
       {/* CONTACT */}
       <section className="py-20 text-center">
-        <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 text-transparent bg-clip-text">
+        <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 text-transparent bg-clip-text">
           Contact
         </h2>
-        <p className="text-gray-400 text-lg">+91-9154887217</p>
-        <p className="text-gray-400 text-lg">ravipativarshith@gmail.com</p>
-        <p className="text-gray-400 text-lg">
-          <a href="https://www.linkedin.com/in/varshith-ravipati" className="underline hover:text-purple-500">
-            www.linkedin.com/in/varshith-ravipati
-          </a>
-        </p>
+        <p className="text-gray-400">+91-9154887217</p>
+        <p className="text-gray-400">ravipativarshith@gmail.com</p>
       </section>
     </div>
   );
